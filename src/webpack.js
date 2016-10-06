@@ -20,13 +20,20 @@ Plugin.prototype = {
       // So entries load relative to the conf file
       conf.context = path.dirname(loadPath);
       // So output is relative to the build
-      conf.output.path = path.join(process.cwd(), extras.destination, conf.output.path);
-      console.log(conf.output.path)
+      var oldPath = conf.output.path;
+      conf.output.path = path.join(process.cwd(), extras.destination, oldPath);
 
       webpack(conf, function(err, stats) {
-        // console.log(util.inspect(stats.toJson(true), false, null))
+        if(err) return callback(null, config, extras);
+
+        var json = stats.toJson();
+        var manifest = {};
+        _.each(json.assetsByChunkName, function(v, k) {
+          manifest[k] = path.join(oldPath, v);
+        });
+        
         // SET TO LIQUID LOCALS
-        callback(err, config, extras);
+        callback(null, config, extras);
       });
 
     } else {

@@ -1,67 +1,37 @@
+var webpack = require("webpack");
+var fs = require('fs');
+var _ = require("lodash");
 var path = require('path');
-var _ = require('lodash');
-var katex = require('katex');
-var through = require('through2');
-var cheerio = require('cheerio');
-var markdownitKatex = require('markdown-it-katex');
+var util = require('util');
 
 var Plugin = function(registry) {
-  registry.before('stylesheets:move', 'katex:setup', this.setupKatex);
-  registry.after('markdown:convert', 'katex:html', this.replaceHTML);
+  registry.before('load', 'webpack:run', this.run);
 }
 
 Plugin.prototype = {
 
-  setupKatex: function(config, extras, callback) {
+  run: function(config, extras, callback) {
 
-    // make sure we parse $-$ and $$-$$ into katex markup
-    extras.md.use(markdownitKatex);
+    if(config.webpack) {
 
-    // Stylesheets
-    var css = path.join(__dirname, "..", "assets", "katex", "katex.scss");
-    config.stylesheets = config.stylesheets || {};
-    config.stylesheets.files = config.stylesheets.files || [];
-    if(_.isString(config.stylesheets.files)) {
-      config.stylesheets.files = [config.stylesheets.files]
-    }
-    config.stylesheets.files.unshift(css);
+      var loadPath = path.join(process.cwd(), config.webpack);
+      var conf = require(loadPath);
 
-    // Fonts
-    var fonts = path.join(__dirname, "..", "assets", "katex", "fonts", "**/*.*");
-    config.fonts = config.fonts || {};
-    config.fonts.files = config.fonts.files || [];
-    if(_.isString(config.fonts.files)) {
-      config.fonts.files = [config.fonts.files]
-    }
-    config.fonts.files.unshift(fonts);
+      // So entries load relative to the conf file
+      conf.context = path.dirname(loadPath);
+      // So output is relative to the build
+      conf.output.path = path.join(process.cwd(), extras.destination, conf.output.path);
+      console.log(conf.output.path)
 
-    callback(null, config, extras);
-  },
-
-  replaceHTML: function(config, stream, extras, callback) {
-
-    stream = stream.pipe(through.obj(function(file, enc, cb) {
-
-      file.$el = file.$el || cheerio.load(file.contents.toString());
-      var found = false;
-
-      file.$el('span[data-type="equation"],div[data-type="equation"]').each(function(i, el) {
-        var jel = file.$el(this);
-        var latex = jel.html();
-        var newEl = file.$el(katex.renderToString(latex, { displayMode: el.tagName == 'div' }));
-        jel.replaceWith(newEl);
-        found = true;
+      webpack(conf, function(err, stats) {
+        // console.log(util.inspect(stats.toJson(true), false, null))
+        // SET TO LIQUID LOCALS
+        callback(err, config, extras);
       });
 
-      if(found) {
-        file.contents = new Buffer(file.$el.html());
-      }
-
-      cb(null, file);
-    }));
-
-    callback(null, config, stream, extras);
-
+    } else {
+      callback(null, config, extras);
+    }
   }
 }
 

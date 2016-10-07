@@ -38,3 +38,9 @@ This can be done per build, so you can use a separate webpack configuration file
     { "webpack" : "another.config.js" }
   ]
 }
+
+Then use the output from react in your layouts.
+
+```html
+<script src="{{ webpack.main }}"></script>
+```

@@ -64,7 +64,6 @@ Plugin.prototype = {
     stream = stream.pipe(through.obj(function(file, enc, cb) {
 
       _.each(manifest, function(filename, k) {
-        console.log(file.relative, path.dirname(file.relative), filename)
         var rel = path.relative(path.dirname(file.relative), filename);
         _.set(file, 'layoutLocals.webpack.' + k, rel);
         _.set(file, 'pageLocals.webpack.' + k, rel);

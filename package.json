@@ -18,6 +18,6 @@
     "jasmine": "^2.4.1",
     "rimraf": "^2.5.2",
     "node-uuid": "^1.4.7",
-    "magicbook": "latest"
+    "magicbook": "0.1.12"
   }
 }

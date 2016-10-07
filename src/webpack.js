@@ -31,7 +31,9 @@ Plugin.prototype = {
         _.each(json.assetsByChunkName, function(v, k) {
           manifest[k] = path.join(oldPath, v);
         });
-        
+
+
+
         // SET TO LIQUID LOCALS
         callback(null, config, extras);
       });

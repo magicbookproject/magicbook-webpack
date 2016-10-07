@@ -1,7 +1,7 @@
 {
   "repository": "https://github.com/magicbookproject/magicbook-webpack.git",
   "version": "0.0.1",
-  "name": "magicbook-katex",
+  "name": "magicbook-webpack",
   "description": "Webpack plugin for magicbook",
   "author": "magicbookproject",
   "license": "MIT",
@@ -10,9 +10,10 @@
     "magicbook",
     "magicbook-plugin"
   ],
-  "dependencies": {
+  "dependencies" : {
     "webpack": "^1.13.2",
-    "lodash": "^4.6.1"
+    "lodash": "^4.6.1",
+    "through2": "^2.0.1"
   },
   "devDependencies": {
     "jasmine": "^2.4.1",

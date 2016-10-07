@@ -36,4 +36,18 @@ describe("Webpack", function() {
     });
   });
 
+  it("should pass manifest to liquid", function(done) {
+    var uid = triggerBuild({
+      files: ["book/content/webpack.md", 'book/content/**/test.md'],
+      builds: [{ format: "html" }],
+      finish: function() {
+        var file1 = fs.readFileSync(path.join('tmp', uid, 'build1/webpack.html')).toString();
+        var file2 = fs.readFileSync(path.join('tmp', uid, 'build1/subfolder/test.html')).toString();
+        expect(file1).toMatch('LINK: assets/bundle.js');
+        expect(file2).toMatch('LINK: ../assets/bundle.js');
+        done();
+      }
+    });
+  });
+
 });

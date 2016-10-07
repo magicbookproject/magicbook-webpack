@@ -1,3 +1,3 @@
-# Webpack
+# Subfolder test
 
 LINK: {{ webpack.main }}

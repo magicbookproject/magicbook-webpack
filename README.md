@@ -1,6 +1,10 @@
 ## Magicbook webpack
 
-This is a plugin that wraps webpack to use with magicbook.
+This is a plugin that wraps webpack to use with magicbook. It will:
+
+- Run webpack for each magicbook build
+- Allow you to have separate webpack configs for builds
+- Automatically place output relative to build folder
 
 ## Using the plugin
 

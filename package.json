@@ -1,6 +1,6 @@
 {
   "repository": "https://github.com/magicbookproject/magicbook-webpack.git",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "name": "magicbook-webpack",
   "description": "Webpack plugin for magicbook",
   "author": "magicbookproject",

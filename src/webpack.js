@@ -38,10 +38,14 @@ Plugin.prototype = {
       // Run webpack
       webpack(conf, function(err, stats) {
 
-        if(err) return callback(null, config, extras);
+        if(err) return callback(err, config, extras);
+
+        var json = stats.toJson();
+
+        if(json.errors.length > 0)   console.error(json.errors);
+        if(json.warnings.length > 0) console.warn(json.warnings);
 
         // Parse output files into a manifest object
-        var json = stats.toJson();
         _.each(json.assetsByChunkName, function(v, k) {
           that.manifest[k] = path.join(oldPath, v);
         });
